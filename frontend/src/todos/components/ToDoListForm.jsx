@@ -57,6 +57,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
   )
 
   const updateTodoList = () => {
+    console.log("updating");
     saveToDoList(parseInt(toDoList.id, 10) - 1, { todos });
 
     axios.post(uppDateTodoEndpoint, { list_id: toDoList.id, todos: todos })
@@ -70,7 +71,8 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
 
   return (
     <Card className={classes.card}>
-      <CardContent>
+      <CardContent
+        onBlur={event => updateTodoList()}>
         <Typography variant='headline' component='h2'>
           {toDoList.title}
         </Typography>
@@ -84,19 +86,18 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 label='What to do?'
                 value={todoItem.message}
                 onChange={event => {
-                  todos[index].message = event.target.value
-                  setTodos(todos)
-                  updateTodoList();
+                  todos[index].message = event.target.value;
+                  setTodos(todos);
                 }}
                 className={classes.textField}
               />
 
-              <Select className={classes.select}value={0} disabled={todoItem.finished}>
+
+              {/* <Select className={classes.select}value={0} disabled={todoItem.finished}>
                 <MenuItem value={0} disabled={true} hidden={true}>When to do it?</MenuItem>
                 <MenuItem value={1}>Tomorrow</MenuItem>
                 <MenuItem value={7}>In a week</MenuItem>
-              </Select>
-
+              </Select> */}
 
 
               <Tooltip title="Delete">
@@ -131,7 +132,6 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
               color='primary'
               onClick={() => {
                 setTodos([...todos, {message: '', finished: false}])
-                updateTodoList();
               }}
             >
               Add Todo <AddIcon />
