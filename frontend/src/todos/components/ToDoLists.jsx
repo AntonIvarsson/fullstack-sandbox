@@ -7,32 +7,21 @@ import ListItemText from '@material-ui/core/ListItemText'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ReceiptIcon from '@material-ui/icons/Receipt'
 import Typography from '@material-ui/core/Typography'
+import Checkbox from '@material-ui/core/Checkbox';
 import { ToDoListForm } from './ToDoListForm'
+import axios from 'axios';
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
-
-const getPersonalTodos = () => {
-  return sleep(1000).then(() => Promise.resolve({
-    '0000000001': {
-      id: '0000000001',
-      title: 'First List',
-      todos: ['First todo of first list!']
-    },
-    '0000000002': {
-      id: '0000000002',
-      title: 'Second List',
-      todos: ['First todo of second list!']
-    }
-  }))
-}
+const personalTodosEndpoint = 'http://localhost:3001/todolists'
 
 export const ToDoLists = ({ style }) => {
+
   const [toDoLists, setToDoLists] = useState({})
   const [activeList, setActiveList] = useState()
 
   useEffect(() => {
-    getPersonalTodos()
-      .then(setToDoLists)
+    axios.get(personalTodosEndpoint)
+      .then(resp => setToDoLists(resp.data.data) )
+      .catch(() => alert('Something went wrong loading your todos, sorry for that :('));
   }, [])
 
   if (!Object.keys(toDoLists).length) return null
@@ -55,6 +44,10 @@ export const ToDoLists = ({ style }) => {
               <ReceiptIcon />
             </ListItemIcon>
             <ListItemText primary={toDoLists[key].title} />
+            <Checkbox
+              disabled={true}
+              checked={!toDoLists[key].todos.map(x => x.finished).includes(false)}
+            />
           </ListItem>)}
         </List>
       </CardContent>

@@ -4,10 +4,17 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
 import Button from '@material-ui/core/Button'
+import Tooltip from '@material-ui/core/Tooltip'
 import DeleteIcon from '@material-ui/icons/Delete'
+import Checkbox from '@material-ui/core/Checkbox';
 import AddIcon from '@material-ui/icons/Add'
 import Typography from '@material-ui/core/Typography'
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import { TextField } from '../../shared/FormFields'
+import axios from 'axios';
+
+const uppDateTodoEndpoint = 'http://localhost:3001/todo'
 
 const useStyles = makeStyles({
   card: {
@@ -18,7 +25,7 @@ const useStyles = makeStyles({
     alignItems: 'center'
   },
   textField: {
-    flexGrow: 1
+    flexGrow: 2
   },
   standardSpace: {
     margin: '8px'
@@ -27,6 +34,11 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1
+  },
+  select: {
+    flexGrow: 2,
+    marginTop: '16px',
+    marginLeft: '15px'
   }
 })
 
@@ -44,9 +56,16 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
     [toDoList.id]
   )
 
+  const updateTodoList = () => {
+    saveToDoList(parseInt(toDoList.id, 10) - 1, { todos });
+
+    axios.post(uppDateTodoEndpoint, { list_id: toDoList.id, todos: todos })
+      .catch(err => alert('There was a problem saving your todos, sorry for that.'));
+  }
+
   const handleSubmit = event => {
     event.preventDefault()
-    saveToDoList(toDoList.id, { todos })
+    updateTodoList();
   }
 
   return (
@@ -56,20 +75,31 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
           {toDoList.title}
         </Typography>
         <form onSubmit={handleSubmit} className={classes.form}>
-          {todos.map((name, index) => (
+          {todos.map((todoItem, index) => (
             <div key={index} className={classes.todoLine}>
               <Typography className={classes.standardSpace} variant='title'>
                 {index + 1}
               </Typography>
               <TextField
                 label='What to do?'
-                value={name}
+                value={todoItem.message}
                 onChange={event => {
-                  todos[index] = event.target.value
+                  todos[index].message = event.target.value
                   setTodos(todos)
+                  updateTodoList();
                 }}
                 className={classes.textField}
               />
+
+              <Select className={classes.select}value={0} disabled={todoItem.finished}>
+                <MenuItem value={0} disabled={true} hidden={true}>When to do it?</MenuItem>
+                <MenuItem value={1}>Tomorrow</MenuItem>
+                <MenuItem value={7}>In a week</MenuItem>
+              </Select>
+
+
+
+              <Tooltip title="Delete">
               <Button
                 size='small'
                 color='secondary'
@@ -77,10 +107,22 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 onClick={() => {
                   todos.splice(index, 1)
                   setTodos(todos)
+                  updateTodoList();
                 }}
               >
-                <DeleteIcon />
+                  <DeleteIcon />
               </Button>
+              </Tooltip>
+              <Tooltip title={ todoItem.finished ? 'You are done! Good work.' : 'Done?' }>
+              <Button
+                onClick={() => {
+                  todoItem.finished = !todoItem.finished;
+                  updateTodoList();
+                }}
+              >
+              <Checkbox checked={todoItem.finished} />
+              </Button>
+              </Tooltip>
             </div>
           ))}
           <CardActions>
@@ -88,13 +130,11 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
               type='button'
               color='primary'
               onClick={() => {
-                setTodos([...todos, ''])
+                setTodos([...todos, {message: '', finished: false}])
+                updateTodoList();
               }}
             >
               Add Todo <AddIcon />
-            </Button>
-            <Button type='submit' variant='contained' color='primary'>
-              Save
             </Button>
           </CardActions>
         </form>
