@@ -8,24 +8,24 @@ var db = new loki('db.json', {
 });
 
 function databaseInitialize() {
-  var todoLists = db.getCollection("todoLists");
+  var todoLists = db.getCollection('todoLists');
   if (todoLists === null) {
-    todoLists = db.addCollection("todoLists");
+    todoLists = db.addCollection('todoLists');
     todoLists.insert([
       {
         id: '0000000001',
         title: 'First List',
         todos: [
-          { message: 'First todo of first list', finished: false, deadline: null },
-          { message: 'Second todo of first list', finished: true, deadline: null }
+          { message: 'First todo of first list', finished: false, deadline: '' },
+          { message: 'Second todo of first list', finished: true, deadline: '' }
         ]
       },
       {
         id: '0000000002',
         title: 'Second List',
         todos: [
-          { message: 'First todo of second list', finished: false, deadline: null },
-          { message: 'Second todo of second list', finished: true, deadline: null }
+          { message: 'First todo of second list', finished: false, deadline: '' },
+          { message: 'Second todo of second list', finished: true, deadline: '' }
         ]
       }
     ]);

@@ -87,7 +87,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 index={index}
                 updateTodoList={updateTodoList}
               />
-              <Tooltip title="Delete">
+              <Tooltip title='Delete'>
                 <Button
                   size='small'
                   color='secondary'

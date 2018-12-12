@@ -21,10 +21,10 @@ function DatePickers(props) {
   return (
     <form className={classes.container} noValidate>
       <TextField
-        id="date"
-        label="Deadline"
-        type="date"
-        defaultValue={props.deadline || null}
+        id='date'
+        label='Deadline'
+        type='date'
+        defaultValue={props.deadline || ''}
         onChange={event => {
           props.setDeadline(event.target.value);
         }}

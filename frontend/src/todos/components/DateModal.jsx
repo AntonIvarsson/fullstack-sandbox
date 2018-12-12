@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import { makeStyles } from '@material-ui/styles';
@@ -40,7 +40,7 @@ export const DateModal = ({ todos, index, updateTodoList }) => {
   const [modalOpen, setModalOpen] = useState()
   const [deadline, setDeadline] = useState(todos[index].deadline)
 
-  Date.daysBetween = function( date1, date2 ) {
+  Date.daysBetween = (date1, date2) => {
     var one_day=1000*60*60*24;
 
     var date1_ms = date1.getTime();
@@ -51,18 +51,12 @@ export const DateModal = ({ todos, index, updateTodoList }) => {
     return Math.round(difference_ms/one_day);
   }
 
-  useEffect(() => {
-  }, [])
-
   const calcuLateTime = () => {
-    if(deadline === null) return "";
+    if(deadline === null) return '';
 
     const timeBetween = Date.daysBetween(new Date(), new Date(todos[index].deadline));
 
-    if(isNaN(timeBetween)) {
-      setDeadline(null);
-      return "";
-    }
+    if(isNaN(timeBetween)) return '';
 
     if(timeBetween < 0 ){
       return `, missed deadline with ${Math.abs(timeBetween)} days`
@@ -74,15 +68,14 @@ export const DateModal = ({ todos, index, updateTodoList }) => {
 
   const giveRender = () => {
     if(todos[index].finished) return
-
     return(
-      <Tooltip title={deadline===null ? "Set deadline" : `Change deadline${calcuLateTime()}`}>
+      <Tooltip title={deadline === '' ? 'Set deadline' : `Change deadline${calcuLateTime()}`}>
         <Button
           onClick={() => {
             setModalOpen(true)
           }}
         >
-        <img src={'baseline-query_builder-24px.svg'}/>
+        <img alt='' src={'baseline-query_builder-24px.svg'}/>
         </Button>
       </Tooltip>
     )
