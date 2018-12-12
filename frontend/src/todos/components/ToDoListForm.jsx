@@ -9,9 +9,8 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import Checkbox from '@material-ui/core/Checkbox';
 import AddIcon from '@material-ui/icons/Add'
 import Typography from '@material-ui/core/Typography'
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import { TextField } from '../../shared/FormFields'
+import { DateModal }  from './DateModal'
 import axios from 'axios';
 
 const uppDateTodoEndpoint = 'http://localhost:3001/todo'
@@ -34,11 +33,6 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1
-  },
-  select: {
-    flexGrow: 2,
-    marginTop: '16px',
-    marginLeft: '15px'
   }
 })
 
@@ -48,7 +42,6 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
   const classes = useStyles()
   const [todos, setTodos] = useState(toDoList.todos)
 
-  // clears any pending todos when the id changes
   useEffect(
     () => {
       setTodos(toDoList.todos)
@@ -57,9 +50,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
   )
 
   const updateTodoList = () => {
-    console.log("updating");
     saveToDoList(parseInt(toDoList.id, 10) - 1, { todos });
-
     axios.post(uppDateTodoEndpoint, { list_id: toDoList.id, todos: todos })
       .catch(err => alert('There was a problem saving your todos, sorry for that.'));
   }
@@ -91,38 +82,34 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 }}
                 className={classes.textField}
               />
-
-
-              {/* <Select className={classes.select}value={0} disabled={todoItem.finished}>
-                <MenuItem value={0} disabled={true} hidden={true}>When to do it?</MenuItem>
-                <MenuItem value={1}>Tomorrow</MenuItem>
-                <MenuItem value={7}>In a week</MenuItem>
-              </Select> */}
-
-
+              <DateModal
+                todos={todos}
+                index={index}
+                updateTodoList={updateTodoList}
+              />
               <Tooltip title="Delete">
-              <Button
-                size='small'
-                color='secondary'
-                className={classes.standardSpace}
-                onClick={() => {
-                  todos.splice(index, 1)
-                  setTodos(todos)
-                  updateTodoList();
-                }}
-              >
+                <Button
+                  size='small'
+                  color='secondary'
+                  className={classes.standardSpace}
+                  onClick={() => {
+                    todos.splice(index, 1)
+                    setTodos(todos)
+                    updateTodoList();
+                  }}
+                >
                   <DeleteIcon />
-              </Button>
+                </Button>
               </Tooltip>
               <Tooltip title={ todoItem.finished ? 'You are done! Good work.' : 'Done?' }>
-              <Button
-                onClick={() => {
-                  todoItem.finished = !todoItem.finished;
-                  updateTodoList();
-                }}
-              >
-              <Checkbox checked={todoItem.finished} />
-              </Button>
+                <Button
+                  onClick={() => {
+                    todoItem.finished = !todoItem.finished;
+                    updateTodoList();
+                  }}
+                >
+                  <Checkbox checked={todoItem.finished} />
+                </Button>
               </Tooltip>
             </div>
           ))}

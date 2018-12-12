@@ -9,6 +9,11 @@ const db = require('./db.js');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+
+// 
+//
+// 
+
 app.get('/', (req, res) => res.send('Nothing here :)'))
 
 app.get('/todolists', (req, res) => res.send(db.getCollection('todoLists')));
@@ -21,6 +26,10 @@ app.post('/todo', (req,res) => {
     res.sendStatus(500);
     throw Error('Post to todo called with missing parameters');
   }
+
+//
+//
+//
 
   const todoList = db.getCollection('todoLists').find({ id: id })
 

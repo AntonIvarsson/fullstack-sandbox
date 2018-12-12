@@ -16,16 +16,16 @@ function databaseInitialize() {
         id: '0000000001',
         title: 'First List',
         todos: [
-          { message: 'First todo of first list', finished: false },
-          { message: 'Second todo of first list', finished: true }
+          { message: 'First todo of first list', finished: false, deadline: null },
+          { message: 'Second todo of first list', finished: true, deadline: null }
         ]
       },
       {
         id: '0000000002',
         title: 'Second List',
         todos: [
-          { message: 'First todo of second list', finished: false },
-          { message: 'Second todo of second list', finished: true }
+          { message: 'First todo of second list', finished: false, deadline: null },
+          { message: 'Second todo of second list', finished: true, deadline: null }
         ]
       }
     ]);
