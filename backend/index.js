@@ -1,45 +1,36 @@
-const express = require('express')
+const express = require("express");
 const bodyParser = require("body-parser");
-const app = express()
+const app = express();
 
-const PORT = 3001
+const PORT = 3001;
 
-const db = require('./db.js');
+const db = require("./db.js");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.get("/", (req, res) => res.send("Nothing here :)"));
 
-// 
-//
-// 
+app.get("/todolists", (req, res) => res.send(db.getCollection("todoLists")));
 
-app.get('/', (req, res) => res.send('Nothing here :)'))
+app.post("/todo", (req, res) => {
+  const id = req.body.list_id;
+  const todos = req.body.todos;
 
-app.get('/todolists', (req, res) => res.send(db.getCollection('todoLists')));
-
-app.post('/todo', (req,res) => {
-  const id = req.body.list_id
-  const todos = req.body.todos
-
-  if(id == null || todos == null){
+  if (id == null || todos == null) {
     res.sendStatus(500);
-    throw Error('Post to todo called with missing parameters');
+    throw Error("Post to todo called with missing parameters");
   }
 
-//
-//
-//
+  const todoList = db.getCollection("todoLists").find({ id: id });
 
-  const todoList = db.getCollection('todoLists').find({ id: id })
-
-  if(todoList === []){
+  if (todoList === []) {
     res.sendStatus(500);
-    throw Error('Post to todo called with invalid id');
+    throw Error("Post to todo called with invalid id");
   }
   todoList[0].todos = todos;
   db.saveDatabase();
   res.sendStatus(200);
 });
 
-app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`))
+app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`));

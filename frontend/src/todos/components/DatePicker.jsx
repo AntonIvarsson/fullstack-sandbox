@@ -1,18 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
+import React from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 
 const styles = theme => ({
   container: {
-    display: 'flex',
-    flexWrap: 'wrap',
+    display: "flex",
+    flexWrap: "wrap"
   },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     flex: 1
-  },
+  }
 });
 
 function DatePickers(props) {
@@ -21,16 +21,16 @@ function DatePickers(props) {
   return (
     <form className={classes.container} noValidate>
       <TextField
-        id='date'
-        label='Deadline'
-        type='date'
-        defaultValue={props.deadline || ''}
+        id="date"
+        label="Deadline"
+        type="date"
+        defaultValue={props.deadline || ""}
         onChange={event => {
           props.setDeadline(event.target.value);
         }}
         className={classes.textField}
         InputLabelProps={{
-          shrink: true,
+          shrink: true
         }}
       />
     </form>
@@ -38,7 +38,7 @@ function DatePickers(props) {
 }
 
 DatePickers.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(DatePickers);
