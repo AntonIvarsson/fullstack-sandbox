@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import PropTypes from 'prop-types';
 import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
 import { makeStyles } from "@material-ui/styles";
@@ -61,11 +62,11 @@ export const DateModal = ({ todos, index, updateTodoList }) => {
     if (isNaN(timeBetween)) return "";
 
     if (timeBetween < 0) {
-      return `, missed deadline with ${Math.abs(timeBetween)} days`;
+      return `Missed deadline with ${Math.abs(timeBetween)} days`;
     } else if (timeBetween === 0) {
-      return " Hurry upp! You have less than 24 hours";
+      return "Hurry upp! You have less than 24 hours";
     }
-    return `, ${Math.abs(timeBetween)} ${
+    return `${Math.abs(timeBetween)} ${
       timeBetween === 1 ? "day" : "days"
     } left`;
   };
@@ -75,7 +76,7 @@ export const DateModal = ({ todos, index, updateTodoList }) => {
     return (
       <Tooltip
         title={
-          deadline === "" ? "Set deadline" : `Change deadline${calcuLateTime()}`
+          deadline === "" ? "Set deadline" : `${calcuLateTime()}, click here to adjust deadline`
         }
       >
         <Button
@@ -107,3 +108,9 @@ export const DateModal = ({ todos, index, updateTodoList }) => {
     </Fragment>
   );
 };
+
+DateModal.propTypes = {
+  todos: PropTypes.array.isRequired,
+  index: PropTypes.number.isRequired,
+  updateTodoList: PropTypes.func.isRequired
+}
